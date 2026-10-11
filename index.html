@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>you</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap');
+:root{--bg:#050507;--panel:rgba(14,14,21,.86);--line:rgba(255,255,255,.14);--text:#fff;--muted:#92929e;--accent:#a78bfa}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--text);font-family:"Vazirmatn",sans-serif}
+body{background:radial-gradient(circle at 50% 42%,rgba(104,75,180,.18),transparent 38%),radial-gradient(circle at 10% 90%,rgba(45,90,150,.12),transparent 35%),#050507}
+body::before{content:"";position:fixed;inset:0;z-index:20;pointer-events:none;opacity:.07;background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);background-size:45px 45px;mask-image:linear-gradient(to bottom,transparent,black,transparent)}
+header{position:fixed;top:0;left:0;right:0;z-index:100;height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:linear-gradient(to bottom,rgba(5,5,7,.97),rgba(5,5,7,.45),transparent);pointer-events:none}
+.brand{display:flex;align-items:center;gap:12px;pointer-events:auto}
+.brand-mark{width:38px;height:38px;display:grid;place-items:center;border:1px solid rgba(167,139,250,.65);border-radius:12px;color:var(--accent);font-weight:900;box-shadow:0 0 25px rgba(167,139,250,.15)}
+.brand h1{margin:0;font-size:15px;font-weight:900;letter-spacing:3px}
+.brand span{display:block;margin-top:2px;color:var(--muted);font-size:10px;letter-spacing:2px}
+.top-status{display:flex;align-items:center;gap:10px;padding:9px 13px;border:1px solid var(--line);border-radius:100px;background:rgba(12,12,18,.65);backdrop-filter:blur(15px);color:#c7c7d0;font-size:11px;pointer-events:auto}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#65f6a3;box-shadow:0 0 13px #65f6a3}
+#scene{position:fixed;inset:0;overflow:hidden;perspective:1250px;perspective-origin:50% 50%}
+#grid{position:absolute;inset:0;transform-style:preserve-3d}
+.video-card{position:absolute;display:block;width:clamp(118px,15vw,245px);aspect-ratio:16/9;object-fit:cover;border-radius:13px;background:#101016;border:1px solid rgba(255,255,255,.18);box-shadow:0 18px 45px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.025) inset;cursor:pointer;opacity:.86;filter:saturate(.82) contrast(1.08);transform-origin:center center;transition:left 1s cubic-bezier(.2,.8,.2,1),top 1s cubic-bezier(.2,.8,.2,1),transform 1s cubic-bezier(.2,.8,.2,1),opacity .4s ease,filter .4s ease,box-shadow .4s ease;will-change:left,top,transform}
+.video-card::after{content:"";position:absolute;inset:0;border-radius:13px;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.13),transparent 30%),linear-gradient(to top,rgba(0,0,0,.5),transparent 45%)}
+.video-card:hover{opacity:1;filter:saturate(1.15) contrast(1.12);box-shadow:0 22px 60px rgba(0,0,0,.7),0 0 35px rgba(167,139,250,.18);z-index:500}
+.video-card.selected{position:fixed;left:50%!important;top:50%!important;width:min(88vw,1100px);height:auto;aspect-ratio:16/9;opacity:1;z-index:1000!important;border-color:rgba(255,255,255,.65);filter:none;transform:translate(-50%,-50%)!important;box-shadow:0 0 0 100vmax rgba(0,0,0,.84),0 35px 100px rgba(0,0,0,.9),0 0 80px rgba(167,139,250,.2)}
+.video-card.paused{opacity:.18;filter:grayscale(1) blur(2px)}
+#center-label{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);z-index:1100;display:none;text-align:center;pointer-events:none}
+#center-label strong{display:block;font-size:14px;letter-spacing:2px}
+#center-label span{display:block;margin-top:5px;color:#aaa;font-size:11px}
+#close{position:fixed;top:95px;left:50%;transform:translateX(-50%);z-index:1200;display:none;padding:9px 17px;border:1px solid rgba(255,255,255,.25);border-radius:100px;background:rgba(15,15,22,.8);color:#fff;font-family:inherit;font-size:11px;cursor:pointer;backdrop-filter:blur(15px)}
+#controls{position:fixed;left:50%;bottom:19px;transform:translateX(-50%);z-index:1300;display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--line);border-radius:100px;background:rgba(12,12,18,.82);backdrop-filter:blur(18px);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.control-btn{height:34px;padding:0 15px;border:1px solid rgba(255,255,255,.12);border-radius:100px;background:rgba(255,255,255,.055);color:#ddd;font-family:inherit;font-size:11px;cursor:pointer;transition:.25s}
+.control-btn:hover,.control-btn.active{background:rgba(167,139,250,.2);border-color:rgba(167,139,250,.7);color:#fff}
+.range-wrap{display:flex;align-items:center;gap:8px;padding:0 9px;color:#999;font-size:10px}
+input[type="range"]{width:80px;accent-color:var(--accent);cursor:pointer}
+#counter{position:fixed;right:24px;bottom:25px;z-index:100;color:#555563;font-size:10px;letter-spacing:2px;direction:ltr}
+#hint{position:fixed;left:24px;bottom:25px;z-index:100;color:#555563;font-size:10px}
+#flash{position:fixed;inset:0;z-index:2000;pointer-events:none;background:white;opacity:0;transition:opacity .12s}
+@media(max-width:700px){
+header{height:65px;padding:0 14px}
+.brand h1{font-size:12px}
+.brand span{font-size:8px}
+.top-status{padding:7px 10px;font-size:9px}
+.video-card{width:clamp(105px,27vw,145px);border-radius:9px}
+.video-card.selected{width:92vw;border-radius:10px}
+#controls{bottom:12px;max-width:calc(100vw - 20px);gap:5px}
+.control-btn{padding:0 10px;font-size:10px}
+.range-wrap{padding:0 3px}
+input[type="range"]{width:55px}
+#counter,#hint{display:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-mark">21</div>
+    <div><h1>CHAOS GRID</h1><span>CONTROLLED 3D EXPERIENCE</span></div>
+  </div>
+  <div class="top-status"><span class="status-dot"></span><span id="statusText">21 VIDEO STREAMS ACTIVE</span></div>
+</header>
+
+<div id="scene"><div id="grid"></div></div>
+<div id="center-label"><strong id="selectedTitle">FILM 01</strong><span>برای بازگشت به شبکه کلیک کن</span></div>
+<button id="close">بازگشت به شبکه ×</button>
+
+<div id="controls">
+  <button class="control-btn active" id="chaosBtn">حرکت فعال</button>
+  <button class="control-btn" id="shuffleBtn">چیدمان جدید</button>
+  <div class="range-wrap"><span>شدت</span><input id="intensity" type="range" min="0" max="100" value="45"></div>
+</div>
+
+<div id="counter">21 / 21</div>
+<div id="hint">روی هر ویدیو کلیک کن</div>
+<div id="flash"></div>
+
+<script>
+const TOTAL=21;
+const grid=document.getElementById("grid");
+const chaosBtn=document.getElementById("chaosBtn");
+const shuffleBtn=document.getElementById("shuffleBtn");
+const intensityInput=document.getElementById("intensity");
+const closeBtn=document.getElementById("close");
+const centerLabel=document.getElementById("center-label");
+const selectedTitle=document.getElementById("selectedTitle");
+const statusText=document.getElementById("statusText");
+const flash=document.getElementById("flash");
+
+let videos=[];
+let slots=[];
+let selectedVideo=null;
+let movementTimer=null;
+let movementEnabled=true;
+let audioStarted=false;
+let intensity=.45;
+
+function random(min,max){
+  return Math.random()*(max-min)+min;
+}
+
+function clamp(value,min,max){
+  return Math.max(min,Math.min(max,value));
+}
+
+function shuffleArray(array){
+  const result=[...array];
+  for(let i=result.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [result[i],result[j]]=[result[j],result[i]];
+  }
+  return result;
+}
+
+function createVideos(){
+  for(let i=1;i<=TOTAL;i++){
+    const video=document.createElement("video");
+    video.className="video-card";
+    video.src=`film${i}.mp4`;
+    video.dataset.number=i;
+    video.preload="auto";
+    video.playsInline=true;
+    video.loop=false;
+    video.muted=true;
+
+    video.addEventListener("click",event=>{
+      event.stopPropagation();
+      selectVideo(video);
+    });
+
+    video.addEventListener("ended",()=>{
+      if(selectedVideo===video){
+        closeSelected();
+      }else{
+        video.currentTime=0;
+      }
+    });
+
+    video.addEventListener("error",()=>{
+      video.style.opacity=".16";
+    });
+
+    grid.appendChild(video);
+    videos.push(video);
+  }
+}
+
+function calculateSlots(){
+  const width=window.innerWidth;
+  const height=window.innerHeight;
+  const columns=width<600?3:width<1000?4:5;
+  const rows=Math.ceil(TOTAL/columns);
+  const safeTop=width<600?75:90;
+  const safeBottom=width<600?82:100;
+  const safeLeft=width<600?8:24;
+  const safeRight=width<600?8:24;
+  const usableWidth=width-safeLeft-safeRight;
+  const usableHeight=height-safeTop-safeBottom;
+  const cellWidth=usableWidth/columns;
+  const cellHeight=usableHeight/rows;
+
+  slots=[];
+
+  for(let row=0;row<rows;row++){
+    for(let col=0;col<columns;col++){
+      if(slots.length>=TOTAL)break;
+      slots.push({
+        row,col,columns,rows,cellWidth,cellHeight,
+        x:safeLeft+col*cellWidth+cellWidth/2,
+        y:safeTop+row*cellHeight+cellHeight/2
+      });
+    }
+  }
+}
+
+function getVideoSize(video){
+  const rect=video.getBoundingClientRect();
+  return {width:rect.width||180,height:rect.height||105};
+}
+
+function applySlot(video,slot){
+  if(!slot)return;
+
+  const size=getVideoSize(video);
+  const movementPower=intensity*Math.min(slot.cellWidth,slot.cellHeight)*.16;
+  let x=slot.x+random(-movementPower,movementPower);
+  let y=slot.y+random(-movementPower,movementPower);
+
+  const safeLeft=10;
+  const safeRight=10;
+  const safeTop=88;
+  const safeBottom=95;
+  const minX=safeLeft+size.width/2;
+  const maxX=window.innerWidth-safeRight-size.width/2;
+  const minY=safeTop+size.height/2;
+  const maxY=window.innerHeight-safeBottom-size.height/2;
+
+  x=clamp(x,minX,maxX);
+  y=clamp(y,minY,maxY);
+
+  const rotation=random(-2.2,2.2)*(intensity+.25);
+  const depth=random(-55,55)*intensity;
+
+  video.style.left=`${x}px`;
+  video.style.top=`${y}px`;
+  video.style.transform=`translate(-50%,-50%) translateZ(${depth}px) rotate(${rotation}deg)`;
+}
+
+function arrangeBalanced(){
+  calculateSlots();
+  const order=shuffleArray(videos);
+
+  order.forEach((video,index)=>{
+    video.classList.remove("selected","paused");
+    video.style.position="absolute";
+    video.style.width="";
+    video.style.height="";
+    applySlot(video,slots[index]);
+  });
+}
+
+function moveInsideSlots(){
+  if(!movementEnabled||selectedVideo)return;
+  videos.forEach((video,index)=>applySlot(video,slots[index]));
+}
+
+function startMovement(){
+  stopMovement();
+  movementTimer=setInterval(moveInsideSlots,1500);
+}
+
+function stopMovement(){
+  if(movementTimer){
+    clearInterval(movementTimer);
+    movementTimer=null;
+  }
+}
+
+function startAudio(){
+  if(audioStarted)return;
+  audioStarted=true;
+
+  videos.forEach(video=>{
+    video.muted=true;
+    video.volume=random(.07,.18);
+  });
+
+  statusText.textContent="21 VIDEO STREAMS ACTIVE";
+}
+
+function waitForEvent(video,eventName){
+  return new Promise((resolve,reject)=>{
+    const onDone=()=>{
+      cleanup();
+      resolve();
+    };
+
+    const onError=()=>{
+      cleanup();
+      reject(new Error("Video loading failed"));
+    };
+
+    const cleanup=()=>{
+      video.removeEventListener(eventName,onDone);
+      video.removeEventListener("error",onError);
+    };
+
+    video.addEventListener(eventName,onDone,{once:true});
+    video.addEventListener("error",onError,{once:true});
+  });
+}
+
+async function restartFromBeginning(video){
+  try{
+    if(video.readyState<1){
+      const metadataPromise=waitForEvent(video,"loadedmetadata");
+      video.load();
+      await metadataPromise;
+    }
+
+    if(selectedVideo!==video)return;
+
+    video.pause();
+
+    if(video.currentTime!==0){
+      const seekPromise=waitForEvent(video,"seeked");
+      video.currentTime=0;
+      await seekPromise;
+    }else if(video.readyState<2){
+      await waitForEvent(video,"loadeddata");
+    }
+
+    if(selectedVideo!==video)return;
+
+    await video.play();
+  }catch(error){
+    console.error("Video playback error:",error);
+  }
+}
+
+function selectVideo(video){
+  if(selectedVideo===video){
+    closeSelected();
+    return;
+  }
+
+  startAudio();
+  selectedVideo=video;
+  movementEnabled=false;
+  stopMovement();
+
+  videos.forEach(item=>{
+    if(item!==video){
+      item.pause();
+      item.muted=true;
+      item.classList.add("paused");
+      item.classList.remove("selected");
+    }
+  });
+
+  video.classList.remove("paused");
+  video.classList.add("selected");
+  video.pause();
+  video.muted=false;
+  video.volume=1;
+
+  selectedTitle.textContent=`FILM ${String(video.dataset.number).padStart(2,"0")}`;
+  centerLabel.style.display="block";
+  closeBtn.style.display="block";
+  chaosBtn.classList.remove("active");
+
+  flash.style.opacity=".07";
+  setTimeout(()=>{flash.style.opacity="0"},120);
+
+  restartFromBeginning(video);
+}
+
+function closeSelected(){
+  if(!selectedVideo)return;
+
+  const active=selectedVideo;
+  selectedVideo=null;
+
+  centerLabel.style.display="none";
+  closeBtn.style.display="none";
+
+  active.pause();
+
+  try{
+    active.currentTime=0;
+  }catch(error){}
+
+  active.classList.remove("selected");
+
+  videos.forEach(video=>{
+    video.classList.remove("paused");
+    video.muted=true;
+    video.volume=random(.07,.18);
+    video.pause();
+
+    try{
+      video.currentTime=0;
+    }catch(error){}
+  });
+
+  movementEnabled=true;
+  chaosBtn.classList.add("active");
+
+  arrangeBalanced();
+  startMovement();
+}
+
+function newArrangement(){
+  if(selectedVideo)closeSelected();
+
+  arrangeBalanced();
+  movementEnabled=true;
+  chaosBtn.classList.add("active");
+  startMovement();
+}
+
+chaosBtn.addEventListener("click",()=>{
+  movementEnabled=!movementEnabled;
+  chaosBtn.classList.toggle("active",movementEnabled);
+
+  if(movementEnabled){
+    startMovement();
+  }else{
+    stopMovement();
+  }
+});
+
+shuffleBtn.addEventListener("click",newArrangement);
+
+intensityInput.addEventListener("input",()=>{
+  intensity=Number(intensityInput.value)/100;
+  if(!selectedVideo)arrangeBalanced();
+});
+
+closeBtn.addEventListener("click",closeSelected);
+
+document.getElementById("scene").addEventListener("click",()=>{
+  if(selectedVideo)closeSelected();
+});
+
+document.addEventListener("click",startAudio,{once:true});
+
+window.addEventListener("resize",()=>{
+  if(!selectedVideo)setTimeout(arrangeBalanced,100);
+});
+
+createVideos();
+
+setTimeout(()=>{
+  arrangeBalanced();
+  startMovement();
+},150);
+</script>
+</body>
+</html>
